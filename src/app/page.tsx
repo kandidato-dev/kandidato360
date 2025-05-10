@@ -97,9 +97,13 @@ export default function Home() {
       {/* Compare Candidate Button */}
       <Link href="/compare">
         <button className="fixed left-0 right-0 bottom-16 w-full bg-[#0A4990] text-white flex items-center justify-center gap-2 py-4 font-semibold text-lg shadow-lg z-40 rounded-none">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-3A2.25 2.25 0 008.25 5.25V9m7.5 0h-7.5m7.5 0v10.5A2.25 2.25 0 0113.5 21h-3a2.25 2.25 0 01-2.25-2.25V9m7.5 0h-7.5" />
-          </svg>
+          <Image
+            src="/static/svg/compare-symbol.svg"
+            alt="Compare"
+            width={24}
+            height={24}
+            className="text-white"
+          />
           Compare Candidate
         </button>
       </Link>

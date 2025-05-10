@@ -94,7 +94,7 @@ Return only valid JSON, no commentary, no markdown.
 
   try {
     const chatCompletion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-4o',
       messages: [
         { role: 'system', content: 'You are a political data assistant returning JSON only.' },
         { role: 'user', content: prompt }

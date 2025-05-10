@@ -89,7 +89,16 @@ export default function ComparePage() {
             </svg>
           </button>
         </Link>
-        <h1 className="text-2xl font-bold">Compare</h1>
+        <div className="flex items-center">
+          <Image
+            src="/static/svg/compare-symbol.svg"
+            alt="Compare"
+            width={24}
+            height={24}
+            className="mr-2"
+          />
+          <h1 className="text-2xl font-bold">Compare Candidate</h1>
+        </div>
       </div>
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
@@ -105,26 +114,32 @@ export default function ComparePage() {
           `}</style>
         </div>
       )}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
         {[0, 1].map((idx) => (
-          <div key={idx} className="flex flex-col items-center w-1/2">
-             <div className="text-xs mt-2">Select a candidate</div>
-
-            <select
-              className="mb-2 p-2 border rounded"
-              value={idx === 0 ? selectedA : selectedB}
-              onChange={e => idx === 0 ? setSelectedA(e.target.value) : setSelectedB(e.target.value)}
-            >
-              <option value="">Select Candidate {idx === 0 ? 'A' : 'B'}</option>
-              {candidateOptions.map(opt => (
-                <option key={opt.id} value={opt.name}>{opt.name}</option>
-              ))}
-            </select>
-            <Image src={candidateOptions.find(opt => opt.name === (idx === 0 ? selectedA : selectedB))?.image || "/static/images/candidate_avatar.png"} width={100} height={100} alt={candidates[idx]?.fullName || `Candidate ${idx === 0 ? 'A' : 'B'}`} className="rounded-full" />
+          <div key={idx} className="flex flex-col items-center w-full md:w-1/2 relative">
+            <div className="text-xs mt-2">Select a candidate</div>
+            <div className="w-full max-w-[300px] relative">
+              <select
+                className="mb-2 p-2 border rounded w-full relative z-10"
+                value={idx === 0 ? selectedA : selectedB}
+                onChange={e => idx === 0 ? setSelectedA(e.target.value) : setSelectedB(e.target.value)}
+              >
+                <option value="">Select Candidate {idx === 0 ? 'A' : 'B'}</option>
+                {candidateOptions.map(opt => (
+                  <option key={opt.id} value={opt.name}>{opt.name}</option>
+                ))}
+              </select>
+            </div>
+            <Image 
+              src={candidateOptions.find(opt => opt.name === (idx === 0 ? selectedA : selectedB))?.image || "/static/images/candidate_avatar.png"} 
+              width={100} 
+              height={100} 
+              alt={candidates[idx]?.fullName || `Candidate ${idx === 0 ? 'A' : 'B'}`} 
+              className="rounded-full" 
+            />
             <div className="mt-2 text-center">
               <div className="font-bold">{candidates[idx]?.fullName}</div>
               <div className="bg-[#0A4990] text-white rounded-lg px-4 py-2 mt-2 inline-block">{candidates[idx]?.party}</div>
-            
             </div>
           </div>
         ))}
