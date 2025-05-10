@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import ErrorDialog from '@/components/ErrorDialog';
 
 interface Stance {
   issue: string;
@@ -50,13 +51,21 @@ export default function ComparePage() {
   const [selectedA, setSelectedA] = useState<string>("");
   const [selectedB, setSelectedB] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
 
   useEffect(() => {
     // Fetch candidate list for dropdowns
     const fetchCandidates = async () => {
-      const res = await fetch("/api/candidates");
-      const data = await res.json();
-      setCandidateOptions(data);
+      try {
+        const res = await fetch("/api/candidates");
+        const data = await res.json();
+        setCandidateOptions(data);
+      } catch (err) {
+        console.error('Failed to load candidates:', err);
+        setError('Failed to load candidates. Please try again later.');
+        setIsErrorDialogOpen(true);
+      }
     };
     fetchCandidates();
   }, []);
@@ -66,14 +75,30 @@ export default function ComparePage() {
       setLoading(true);
       // Fetch comparison data
       const fetchComparison = async () => {
-        const res = await fetch("/api/compareCandidates", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ candidateA: selectedA, candidateB: selectedB }),
-        });
-        const data = await res.json();
-        setCandidates(data.candidates || []);
-        setLoading(false);
+        try {
+          const res = await fetch("/api/compareCandidates", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ candidateA: selectedA, candidateB: selectedB }),
+          });
+          
+          if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || 'Failed to fetch comparison data');
+          }
+
+          const data = await res.json();
+          setCandidates(data.candidates || []);
+          setError(null);
+        } catch (err) {
+          console.error('Failed to fetch comparison:', err);
+          const errorMessage = err instanceof Error ? err.message : 'Failed to fetch response from OpenAI';
+          setError(errorMessage);
+          setIsErrorDialogOpen(true);
+          setCandidates([]); // Clear candidates on error
+        } finally {
+          setLoading(false);
+        }
       };
       fetchComparison();
     }
@@ -81,6 +106,12 @@ export default function ComparePage() {
 
   return (
     <div className="p-4">
+      <ErrorDialog
+        isOpen={isErrorDialogOpen}
+        onClose={() => setIsErrorDialogOpen(false)}
+        message={error || 'An unexpected error occurred'}
+      />
+
       <div className="flex items-center mb-4">
         <Link href="/">
           <button className="mr-2 p-2 rounded-full hover:bg-gray-100">

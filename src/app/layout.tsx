@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Kandidato360 - Compare Philippine Senatorial Candidates",
   description: "Compare and analyze Philippine senatorial candidates for the 2025 elections. View their backgrounds, stances, laws, and policy focuses.",
+  other: {
+    "google-adsense-account": "ca-pub-9496331727688071"
+  }
 };
 
 export default function RootLayout({
@@ -28,10 +31,10 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9496331727688071"
-          crossOrigin="anonymous"
+          id="adsbygoogle-init"
           strategy="afterInteractive"
+          crossOrigin="anonymous"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9496331727688071"
         />
       </head>
       <body

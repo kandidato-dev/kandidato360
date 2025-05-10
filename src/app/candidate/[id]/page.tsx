@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
+import GoogleAd from '@/components/GoogleAd';
+import ErrorDialog from '@/components/ErrorDialog';
 import Head from 'next/head';
 
 interface Law {
@@ -37,38 +39,14 @@ interface Candidate {
   criminalRecords: string;
 }
 
-const GoogleAd = () => {
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        // @ts-ignore
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-      } catch (e) {
-        // ignore
-      }
-    }
-  }, []);
-
-  return (
-    <div className="flex items-center justify-center h-64 w-full">
-      <ins
-        className="adsbygoogle"
-        style={{ display: 'block', width: '100%', height: '100%' }}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-        data-ad-slot="YYYYYYYYYY"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      ></ins>
-    </div>
-  );
-};
-
 const CandidateDetails = () => {
   const params = useParams();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('background');
   const [candidateData, setCandidateData] = useState<Candidate | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
 
   useEffect(() => {
     if (!params || !searchParams) return;
@@ -83,11 +61,14 @@ const CandidateDetails = () => {
           body: JSON.stringify({ candidateName: params.id }),
         });
         const data = await res.json();
-        console.log('OpenAI API Response:', data);
+        
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to fetch candidate data');
+        }
 
         // Check if the expected fields exist
         if (!data.fullName || !data.background || !data.stances || !data.laws || !data.policyFocus || !data.party) {
-          throw new Error('Invalid response structure: Missing fields');
+          throw new Error('Invalid response structure: Missing required fields');
         }
 
         const { fullName, background, stances, laws, policyFocus, party } = data;
@@ -118,8 +99,12 @@ const CandidateDetails = () => {
           notableAccomplishments: background.notableAccomplishments,
           criminalRecords: background.criminalRecords,
         });
+        setError(null);
       } catch (error) {
         console.error('Failed to fetch candidate data:', error);
+        const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+        setError(errorMessage);
+        setIsErrorDialogOpen(true);
       } finally {
         setLoading(false);
       }
@@ -130,16 +115,31 @@ const CandidateDetails = () => {
 
   if (loading) {
     return (
-      <>
-        <Head>
-          <script
-            data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-          ></script>
-        </Head>
-        <GoogleAd />
-      </>
+      <div className="p-4">
+        <div className="flex items-center mb-4">
+          <Link href="/">
+            <button className="mr-2 p-2 rounded-full hover:bg-gray-100">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
+            </button>
+          </Link>
+          <h1 className="text-2xl font-bold">Candidate Details</h1>
+        </div>
+        <div className="flex flex-col items-center justify-center min-h-[60vh]">
+          <div className="loader mb-4" style={{ borderTopColor: '#0A4990', borderWidth: 4, width: 40, height: 40, borderRadius: '50%', borderStyle: 'solid', borderColor: '#e5e7eb #e5e7eb #0A4990 #e5e7eb', animation: 'spin 1s linear infinite' }} />
+          <span className="text-black font-semibold mb-8">Loading candidate data...</span>
+          <div className="w-full max-w-[728px]">
+            {/* <GoogleAd /> */}
+          </div>
+        </div>
+        <style jsx>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
     );
   }
 
@@ -233,6 +233,12 @@ const CandidateDetails = () => {
 
   return (
     <div className="p-4">
+      <ErrorDialog
+        isOpen={isErrorDialogOpen}
+        onClose={() => setIsErrorDialogOpen(false)}
+        message={error || 'An unexpected error occurred'}
+      />
+      
       <div className="flex items-center mb-4">
         <Link href="/">
           <button className="mr-2 p-2 rounded-full hover:bg-gray-100">
