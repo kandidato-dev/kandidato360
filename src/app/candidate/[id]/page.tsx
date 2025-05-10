@@ -117,8 +117,12 @@ const CandidateDetails = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[300px]">
+      <div className="flex flex-col justify-center items-center min-h-[300px]">
         <GoogleAd />
+        <div className="mt-4 flex flex-col items-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-2"></div>
+          <span className="text-gray-600 text-sm">Loading candidate details...</span>
+        </div>
       </div>
     );
   }
