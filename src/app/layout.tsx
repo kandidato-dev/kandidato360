@@ -39,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="google-adsense-account" content={process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || ''} />
+        {/* <meta name="google-adsense-account" content={process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || ''} /> */}
         
       </head>
       {/* <Script

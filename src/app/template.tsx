@@ -8,12 +8,12 @@ export default function Template({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Script
+      {/* <Script
         id="adsbygoogle-init"
         strategy="afterInteractive"
         crossOrigin="anonymous"
         src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${clientId}${isTestMode ? '&adsense_test=true' : ''}`}
-      />
+      /> */}
       {children}
     </>
   );
