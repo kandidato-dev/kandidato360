@@ -132,7 +132,7 @@ export default function ComparePage() {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
           <div className="bg-white p-6 rounded shadow-lg flex flex-col items-center">
             <div className="loader mb-2" style={{ borderTopColor: '#0A4990', borderWidth: 4, width: 40, height: 40, borderRadius: '50%', borderStyle: 'solid', borderColor: '#e5e7eb #e5e7eb #0A4990 #e5e7eb', animation: 'spin 1s linear infinite' }} />
-            <span className="text-black font-semibold">Loading comparison...</span>
+            <span className="text-black font-semibold">AI is now comparing candidates and fetching data...</span>
           </div>
           <style jsx>{`
             @keyframes spin {
