@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: "Kandidato360 - Compare Philippine Senatorial Candidates",
   description: "Compare and analyze Philippine senatorial candidates for the 2025 elections. View their backgrounds, stances, laws, and policy focuses.",
   other: {
-    "google-adsense-account": process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID
+    "google-adsense-account": process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || ''
   }
 };
 
