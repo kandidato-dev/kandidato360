@@ -70,39 +70,35 @@ export default function ComparePage() {
     fetchCandidates();
   }, []);
 
-  useEffect(() => {
-    if (selectedA && selectedB) {
-      setLoading(true);
-      // Fetch comparison data
-      const fetchComparison = async () => {
-        try {
-          const res = await fetch("/api/compareCandidates", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ candidateA: selectedA, candidateB: selectedB }),
-          });
-          
-          if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error || 'Failed to fetch comparison data');
-          }
+  // Add this function to trigger comparison only on button click
+  const handleCompare = async () => {
+    if (!selectedA || !selectedB) return;
+    setLoading(true);
+    try {
+      const res = await fetch("/api/compareCandidates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ candidateA: selectedA, candidateB: selectedB }),
+      });
 
-          const data = await res.json();
-          setCandidates(data.candidates || []);
-          setError(null);
-        } catch (err) {
-          console.error('Failed to fetch comparison:', err);
-          const errorMessage = err instanceof Error ? err.message : 'Failed to fetch response from OpenAI';
-          setError(errorMessage);
-          setIsErrorDialogOpen(true);
-          setCandidates([]); // Clear candidates on error
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchComparison();
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to fetch comparison data');
+      }
+
+      const data = await res.json();
+      setCandidates(data.candidates || []);
+      setError(null);
+    } catch (err) {
+      console.error('Failed to fetch comparison:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch response from OpenAI';
+      setError(errorMessage);
+      setIsErrorDialogOpen(true);
+      setCandidates([]); // Clear candidates on error
+    } finally {
+      setLoading(false);
     }
-  }, [selectedA, selectedB]);
+  };
 
   return (
     <div className="p-4">
@@ -145,13 +141,15 @@ export default function ComparePage() {
           `}</style>
         </div>
       )}
-      <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+
+      {/* --- Horizontally Aligned Candidate Cards --- */}
+      <div className="flex flex-col md:flex-row justify-center items-start gap-8 mb-8">
         {[0, 1].map((idx) => (
-          <div key={idx} className="flex flex-col items-center w-full md:w-1/2 relative">
-            <div className="text-xs mt-2">Select a candidate</div>
-            <div className="w-full max-w-[300px] relative">
+          <div key={idx} className="flex flex-col items-center w-full md:w-1/2 max-w-xs mx-auto">
+            <div className="text-xs mt-2 mb-2">Select a candidate</div>
+            <div className="w-full max-w-[300px] mb-4">
               <select
-                className="mb-2 p-2 border rounded w-full relative z-10"
+                className="p-2 border rounded w-full"
                 value={idx === 0 ? selectedA : selectedB}
                 onChange={e => idx === 0 ? setSelectedA(e.target.value) : setSelectedB(e.target.value)}
               >
@@ -161,20 +159,40 @@ export default function ComparePage() {
                 ))}
               </select>
             </div>
-            <Image 
-              src={candidateOptions.find(opt => opt.name === (idx === 0 ? selectedA : selectedB))?.image || "/static/images/candidate_avatar.png"} 
-              width={100} 
-              height={100} 
-              alt={candidates[idx]?.fullName || `Candidate ${idx === 0 ? 'A' : 'B'}`} 
-              className="rounded-full" 
-            />
-            <div className="mt-2 text-center">
-              <div className="font-bold">{candidates[idx]?.fullName}</div>
-              <div className="bg-[#0A4990] text-white rounded-lg px-4 py-2 mt-2 inline-block">{candidates[idx]?.party}</div>
+            <div className="w-[120px] h-[120px] rounded-full overflow-hidden flex items-center justify-center bg-gray-200">
+              <Image
+                src={candidateOptions.find(opt => opt.name === (idx === 0 ? selectedA : selectedB))?.image || "/static/images/candidate_avatar.png"}
+                width={120}
+                height={120}
+                alt={candidates[idx]?.fullName || `Candidate ${idx === 0 ? 'A' : 'B'}`}
+                className="object-cover w-full h-full"
+              />
+            </div>
+            <div className="mt-2 text-center min-h-[2.5rem] flex items-center justify-center">
+              <div className="font-bold">{candidates[idx]?.fullName || <span>&nbsp;</span>}</div>
+            </div>
+            <div className="bg-[#0A4990] text-white rounded-lg px-4 py-2 mt-2 inline-block min-h-[2.5rem] flex items-center justify-center">
+              {candidates[idx]?.party || <span>&nbsp;</span>}
             </div>
           </div>
         ))}
       </div>
+      {/* --- End Horizontally Aligned Candidate Cards --- */}
+
+      {/* --- Compare Button Below Candidates --- */}
+      <div className="flex justify-center mb-8">
+        <button
+          onClick={handleCompare}
+          disabled={loading || !selectedA || !selectedB}
+          className={`w-64 bg-blue-700 text-white font-bold rounded-md px-8 py-4 text-xl shadow ${
+            loading || !selectedA || !selectedB ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-800'
+          }`}
+        >
+          {loading ? 'Comparing...' : 'Compare'}
+        </button>
+      </div>
+      {/* --- End Compare Button --- */}
+
       <div className="flex border-b border-gray-300 mb-4">
         <button
           className={`px-4 py-2 ${activeTab === "background" ? "text-yellow-500 font-bold" : "text-gray-500"}`}
