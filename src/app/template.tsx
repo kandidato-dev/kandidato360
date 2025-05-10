@@ -4,7 +4,7 @@ import Script from 'next/script';
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
-  const isTestMode = process.env.NEXT_PUBLIC_ADSENSE_TEST_MODE === 'true';
+  const isTestMode = process.env.NEXT_PUBLIC_ADSENSE_TEST_MODE === 'false';
 
   return (
     <>
