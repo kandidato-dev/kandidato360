@@ -49,6 +49,9 @@ export async function POST(request: Request) {
     - "justification": brief explanation of the candidate's reasoning
     - "sources": array of { "name": "Source Name", "url": "https://..." }
     You always return arrays with at least 5-12 items for "stances" and "laws" if possible.
+
+    Only list laws and bills the candidate is explicitly known to have authored, co-authored, or sponsored. If uncertain or unverified, do not include the item.
+    If the source = "source URL not found" → flag or discard the law
     📦 Return the response in this JSON format:
     
     {
@@ -111,7 +114,7 @@ export async function POST(request: Request) {
     
 
     const chatCompletion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4o',
       messages: [
         { role: 'system', content: 'You are a political data assistant returning JSON only.' },
         { role: 'user', content: prompt }

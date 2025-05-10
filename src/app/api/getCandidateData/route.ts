@@ -60,7 +60,8 @@ Be specific, factual, and exhaustive. Cite official and reputable sources, and i
 - Prioritize sources from: Senate.gov.ph, Congress.gov.ph, Rappler, Inquirer, GMA News, ABS-CBN, CNN Philippines, official press releases or public documents.
 
 ---
-
+Only list laws and bills the candidate is explicitly known to have authored, co-authored, or sponsored. If uncertain or unverified, do not include the item.
+If the source = "source URL not found" → flag or discard the law
 Return the response in this exact JSON structure:
 
 {
@@ -115,7 +116,7 @@ Candidate Name: ${candidateName}
 
 
     const chatCompletion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4o',
       messages: [
         { role: 'system', content: 'You are a political data assistant returning JSON only.' },
         { role: 'user', content: prompt }
