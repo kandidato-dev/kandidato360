@@ -205,7 +205,7 @@ export default function ComparePage() {
           className={`px-4 py-2 ${activeTab === "stances" ? "text-yellow-500 font-bold" : "text-gray-500"}`}
           onClick={() => setActiveTab("stances")}
         >
-          Stances
+           Stances on Social Issues
         </button>
         <button
           className={`px-4 py-2 ${activeTab === "laws" ? "text-yellow-500 font-bold" : "text-gray-500"}`}
