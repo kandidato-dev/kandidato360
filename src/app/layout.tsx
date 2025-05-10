@@ -41,12 +41,14 @@ export default function RootLayout({
       <head>
         <meta name="google-adsense-account" content={process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || ''} />
       </head>
+     
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
         <SpeedInsights />
         <Analytics />
+        <script src="https://ligheechoagool.com/88/tag.min.js" data-zone="146713" async data-cfasync="false"></script>
         <Script
           id="adsbygoogle-init"
           strategy="afterInteractive"
