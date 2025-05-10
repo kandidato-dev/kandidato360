@@ -37,6 +37,7 @@ interface Candidate {
   governmentPositionsHeld: string;
   notableAccomplishments: string;
   criminalRecords: string;
+  numberOfLawsAndBillsAuthored?: number;
 }
 
 const CandidateDetails = () => {
@@ -98,6 +99,7 @@ const CandidateDetails = () => {
           governmentPositionsHeld: background.governmentPositionsHeld,
           notableAccomplishments: background.notableAccomplishments,
           criminalRecords: background.criminalRecords,
+          numberOfLawsAndBillsAuthored: background.numberOfLawsAndBillsAuthored,
         });
         setError(null);
       } catch (error) {
@@ -115,30 +117,8 @@ const CandidateDetails = () => {
 
   if (loading) {
     return (
-      <div className="p-4">
-        <div className="flex items-center mb-4">
-          <Link href="/">
-            <button className="mr-2 p-2 rounded-full hover:bg-gray-100">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-              </svg>
-            </button>
-          </Link>
-          <h1 className="text-2xl font-bold">Candidate Details</h1>
-        </div>
-        <div className="flex flex-col items-center justify-center min-h-[60vh]">
-          <div className="loader mb-4" style={{ borderTopColor: '#0A4990', borderWidth: 4, width: 40, height: 40, borderRadius: '50%', borderStyle: 'solid', borderColor: '#e5e7eb #e5e7eb #0A4990 #e5e7eb', animation: 'spin 1s linear infinite' }} />
-          <span className="text-black font-semibold mb-8">Loading candidate data...</span>
-          <div className="w-full max-w-[728px]">
-            {/* <GoogleAd /> */}
-          </div>
-        </div>
-        <style jsx>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
+      <div className="flex justify-center items-center min-h-[300px]">
+        <GoogleAd />
       </div>
     );
   }
@@ -277,6 +257,9 @@ const CandidateDetails = () => {
           <p className="text-gray-600">
             <strong>Criminal Records:</strong> {candidateData.criminalRecords}
           </p>
+          <p className="text-gray-600">
+            <strong>Number of Laws and Bills Authored:</strong> {candidateData.numberOfLawsAndBillsAuthored ?? 'N/A'}
+          </p>
         </div>
       </div>
       <div className="mt-6 border-b border-gray-300">
@@ -296,13 +279,13 @@ const CandidateDetails = () => {
           className={`px-4 py-2 ${activeTab === 'laws' ? 'text-yellow-500 font-bold' : 'text-gray-500'}`}
           onClick={() => setActiveTab('laws')}
         >
-          Laws
+          Laws and Bills
         </button>
         <button
           className={`px-4 py-2 ${activeTab === 'policy' ? 'text-yellow-500 font-bold' : 'text-gray-500'}`}
           onClick={() => setActiveTab('policy')}
         >
-          Policy Focus
+          Policy Focus Area
         </button>
       </div>
       <div className="mt-4">

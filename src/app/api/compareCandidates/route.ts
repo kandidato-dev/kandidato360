@@ -17,87 +17,106 @@ export async function POST(request: Request) {
     }
 
     const prompt = `
-You are a political data assistant. Compare the following two Philippine senatorial candidates using structured JSON. The comparison should focus on the following categories. I also want you to include the sources of the information and it's URL links:
-Please display list of bills and laws that the candidate has sponsored or co-sponsored.
-Please list all the laws and bills that the candidate has authored, co-authored, or sponsored based on publicly available records. Be exhaustive if possible and cite the official Senate records or reputable news sources for each.
-Please display list of stances of the candidate on the issues, give the issue title and the position of the candidate. Please list down the sources of the information and it's URL links.
-Here are the list of issues that you can use as reference:
--Same-sex Marriage
--Death Penalty
--Legalization of Abortion
--Divorse
--Banning of Political Dynasty
--Legalization of Medical Marijuana
--Federalism
--War on Drugs
--Abortion
--Sogie Bill
-
-Return the response in the following JSON format:
-
-{
-  "candidates": [
+    You are a political data analyst assistant. Compare the following two Philippine senatorial candidates using structured JSON. The comparison should include four major categories:
+    
+    1. Background
+    2. Stances on social/political issues
+    3. Laws and bills authored, co-authored, or sponsored
+    4. Policy focus
+    
+    📌 IMPORTANT INSTRUCTIONS:
+    
+    - For the **laws and bills** section, provide **at least 5–10 publicly recorded items per candidate**. These must include **enacted laws and pending or filed bills** from Senate records or reliable news sources.
+    - Be as **exhaustive as possible**. If more than 10 entries are known and verifiable, include them all.
+    - For each law/bill, include: full title, short summary, role (author/co-author/sponsor), current status (enacted, pending, filed), and citation sources **with real, valid URLs only**.
+    - If a real URL can't be confirmed, use "source URL not found" — never guess.
+    
+    🗳️ Social Issues for Stances:
+    You must include the candidate's known or reported stance on the following:
+    - Same-sex Marriage
+    - Death Penalty
+    - Legalization of Abortion
+    - Divorce
+    - Banning of Political Dynasty
+    - Legalization of Medical Marijuana
+    - Federalism
+    - War on Drugs
+    - SOGIE Bill
+    
+    💡 For each issue, return:
+    - "issue": topic name
+    - "position": Support / Oppose / Neutral
+    - "justification": brief explanation of the candidate's reasoning
+    - "sources": array of { "name": "Source Name", "url": "https://..." }
+    You always return arrays with at least 5-12 items for "stances" and "laws" if possible.
+    📦 Return the response in this JSON format:
+    
     {
-      "id": "slugified-name",
-      "fullName": "Full Candidate Name",
-      "party": "Latest Political Party the candidate belongs to",
-      "background": {
-        "educationalBackground": "...",
-        "professionalExperience": "...",
-        "governmentPositionsHeld": "...",
-        "notableAccomplishments": "...",
-        "criminalRecords": "..."
-      },
-      "stances": [
+      "candidates": [
         {
-          "issue": "Issue Title",
-          "position": "Support/Oppose/Neutral",
-          "justification": "...",
-          "sources": [
-            { "name": "Source Name", "url": "https://..." }
+          "id": "slugified-name",
+          "fullName": "Full Candidate Name",
+          "party": "Most recent known political affiliation",
+          "background": {
+            "educationalBackground": "...",
+            "professionalExperience": "...",
+            "governmentPositionsHeld": "...",
+            "notableAccomplishments": "...",
+            "criminalRecords": "...",
+            "numberOfLawsAndBillsAuthored": "#"
+          },
+          "stances": [
+            {
+              "issue": "Issue Title",
+              "position": "Support/Oppose/Neutral",
+              "justification": "...",
+              "sources": [
+                { "name": "Source Name", "url": "https://..." }
+              ]
+            }
+          ],
+          "laws": [
+            {
+              "title": "Law Title",
+              "role": "Principal author / Co-author",
+              "summary": "...",
+              "status": "Enacted / Pending / Filed",
+              "sources": [
+                { "name": "Source Name", "url": "https://..." }
+              ]
+            }
+            // at least 5 per candidate
+          ],
+          "policyFocus": [
+            "Key policy 1",
+            "Key policy 2",
+            "Key policy 3"
           ]
-        }
-      ],
-      "laws": [
+        },
         {
-          "title": "Law Title",
-          "role": "Principal author / Co-author",
-          "summary": "...",
-          "status": "Enacted / Pending / Filed",
-          "sources": [
-            { "name": "Source Name", "url": "https://..." }
-          ]
+          "id": "second-candidate-id"
+          // same structure
         }
-      ],
-      "policyFocus": [
-        "Key policy 1",
-        "Key policy 2"
       ]
-    },
-    {
-      "id": "second-candidate-id",
-      "fullName": "...",
-      // same structure as above
     }
-  ]
-}
-
-Candidate A: ${candidateA}
-Candidate B: ${candidateB}
-
-Only include source URLs that:
-- Exist publicly and match actual pages from reputable sources
-- Are copied from known media (e.g., Philippine Senate, GMA News, Rappler, Inquirer, ABS-CBN)
-- Do NOT make up fake links — if a real URL cannot be verified, write: "source URL not found"
-Return only valid JSON. No markdown, no commentary.
-`;
+    
+    Candidate A: ${candidateA}
+    Candidate B: ${candidateB}
+    
+    📌 Constraints:
+    - All URLs must be real and publicly accessible.
+    - No fake citations. If uncertain, return "source URL not found".
+    - Return only valid JSON. No commentary, markdown, or formatting.
+    `;
+    
 
     const chatCompletion = await openai.chat.completions.create({
-      model: 'gpt-4',
+      model: 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: 'You are a political data assistant returning JSON only.' },
         { role: 'user', content: prompt }
       ],
+      top_p: 1,
       temperature: 0,
     });
 

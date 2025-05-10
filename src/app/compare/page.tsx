@@ -25,6 +25,7 @@ interface Background {
   professionalExperience: string;
   governmentPositionsHeld: string;
   notableAccomplishments: string;
+  numberOfLawsAndBillsAuthored?: number;
 }
 
 interface Candidate {
@@ -210,13 +211,13 @@ export default function ComparePage() {
           className={`px-4 py-2 ${activeTab === "laws" ? "text-yellow-500 font-bold" : "text-gray-500"}`}
           onClick={() => setActiveTab("laws")}
         >
-          Laws
+          Laws and Bills
         </button>
         <button
           className={`px-4 py-2 ${activeTab === "policy" ? "text-yellow-500 font-bold" : "text-gray-500"}`}
           onClick={() => setActiveTab("policy")}
         >
-          Policy Focus
+          Policy Focus Area
         </button>
       </div>
       <div className="flex gap-4">
@@ -228,6 +229,7 @@ export default function ComparePage() {
                 <p className="text-black"><strong>Professional Experience:</strong> {candidates[idx].background.professionalExperience}</p>
                 <p className="text-black"><strong>Government Positions Held:</strong> {candidates[idx].background.governmentPositionsHeld}</p>
                 <p className="text-black"><strong>Notable Accomplishments:</strong> {candidates[idx].background.notableAccomplishments}</p>
+                <p className="text-black"><strong>Number of Laws and Bills Authored:</strong> {candidates[idx].background.numberOfLawsAndBillsAuthored ?? 'N/A'}</p>
               </div>
             )}
             {activeTab === "stances" && candidates[idx]?.stances && candidates[idx].stances.map((stance, i) => (

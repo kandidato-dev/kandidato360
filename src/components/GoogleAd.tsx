@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from "react";
 
 declare global {
   interface Window {
@@ -9,36 +9,34 @@ declare global {
 }
 
 export default function GoogleAd() {
-  const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
-  const adSlot = process.env.NEXT_PUBLIC_ADSENSE_AD_SLOT;
-  const isTestMode = process.env.NEXT_PUBLIC_ADSENSE_TEST_MODE === 'true';
+  const adRef = useRef<HTMLDivElement>(null);
+  const initialized = useRef(false);
 
   useEffect(() => {
-    try {
-      // Wait for the adsbygoogle object to be available
-      if (typeof window !== 'undefined') {
+    const ad = adRef.current?.querySelector('.adsbygoogle') as HTMLElement | null;
+    if (ad && ad.offsetWidth > 0 && !initialized.current) {
+      try {
+        // @ts-ignore
         (window.adsbygoogle = window.adsbygoogle || []).push({});
+        initialized.current = true;
+      } catch (err) {
+        console.error('AdSense error:', err);
       }
-    } catch (err) {
-      console.error('AdSense error:', err);
     }
   }, []);
 
   return (
-    <div className="w-full flex justify-center my-4">
+    <div
+      ref={adRef}
+      style={{ minWidth: 320, minHeight: 100, width: "100%" }}
+      className="flex justify-center items-center"
+    >
       <ins
         className="adsbygoogle"
-        style={{
-          display: 'block',
-          textAlign: 'center',
-          overflow: 'hidden',
-          minHeight: '100px'
-        }}
-        data-ad-layout="in-article"
-        data-ad-format="fluid"
-        data-ad-client={clientId}
-        data-ad-slot={adSlot}
-        data-adtest={isTestMode ? 'on' : 'off'}
+        style={{ display: "block", width: "100%", minWidth: 320, minHeight: 100 }}
+        data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}
+        data-ad-slot={process.env.NEXT_PUBLIC_ADSENSE_AD_SLOT}
+        data-ad-format="auto"
       />
     </div>
   );

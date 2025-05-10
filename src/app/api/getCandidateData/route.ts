@@ -19,85 +19,108 @@ export async function POST(request: Request) {
     }
 
     const prompt = `
-You are a political data assistant. Provide a structured JSON response containing comprehensive information about the following senatorial candidate, I also want you to include the sources of the information and it's URL links:
-Please display list of bills and laws that the candidate has sponsored or co-sponsored.
-Please list all the laws and bills that the candidate has authored, co-authored, or sponsored based on publicly available records. Be exhaustive if possible and cite the official Senate records or reputable news sources for each.
-Please display list of stances of the candidate on the issues, give the issue title and the position of the candidate. Please list down the sources of the information and it's URL links.
-Here are the list of issues that you can use as reference:
--Same-sex Marriage
--Death Penalty
--Legalization of Abortion
--Divorse
--Banning of Political Dynasty
--Legalization of Medical Marijuana
--Federalism
--War on Drugs
--Abortion
--Sogie Bill
-I want you to be very specific and detailed in your response. 
-Candidate Name: ${candidateName}
+You are a political data assistant. Provide a detailed and structured JSON response containing factual information about the following Philippine senatorial candidate.
 
-Group the information into these sections:
+🔍 Your response must include:
+
+1. 📘 **Background Information**
+2. 📊 **Stances on key social and political issues**
+3. 📜 **Laws and bills authored, co-authored, or sponsored**
+4. 🎯 **Policy focus areas**
+
+Be specific, factual, and exhaustive. Cite official and reputable sources, and include working URL links only.
+
+---
+
+📌 Social Issues to Cover (in stances):
+- Same-sex Marriage
+- Death Penalty
+- Legalization of Abortion
+- Divorce
+- Banning of Political Dynasty
+- Legalization of Medical Marijuana
+- Federalism
+- War on Drugs
+- SOGIE Bill
+
+---
+
+📜 Laws & Bills:
+- Include at least 8-15 publicly recorded items is possible
+- Pull from both House and Senate sources.
+- Include bills even if not enacted.
+- Include title, role (author/co-author/sponsor), summary, bill/law number, current status, and link to official record or credible article.
+
+---
+
+🔐 Source Validity Rules:
+- Use real URLs only.
+- If a real URL cannot be confirmed, write: "source URL not found"
+- Never invent links.
+- Prioritize sources from: Senate.gov.ph, Congress.gov.ph, Rappler, Inquirer, GMA News, ABS-CBN, CNN Philippines, official press releases or public documents.
+
+---
+
+Return the response in this exact JSON structure:
 
 {
   "id": "slugified-name",
   "fullName": "Full Candidate Name",
-  "party": "Political Party",
-  "age": Number,
+  "party": "Most recent political party",
+  "age": 0,
   "background": {
     "educationalBackground": "...",
     "professionalExperience": "...",
     "governmentPositionsHeld": "...",
     "notableAccomplishments": "...",
-    "criminalRecords": "..."
+    "criminalRecords": "...",
+    "numberOfLawsAndBillsAuthored": "#"
   },
   "stances": [
     {
       "issue": "Issue Title",
-      "position": "Support/Oppose/Neutral",
-      "justification": "Short explanation",
-      sources": [
+      "position": "Support / Oppose / Neutral",
+      "justification": "Brief explanation of the stance",
+      "sources": [
         { "name": "Source Name 1", "url": "https://..." },
-         { "name": "Source Name 2", "url": "https://..." }
+        { "name": "Source Name 2", "url": "https://..." }
       ]
     }
   ],
   "laws": [
     {
-      "number": "Housebill No. / Senate Bill No",
-      "title": "Law Title/Bill Title",
-      "role": "Principal author/co-author",
-      "summary": "What the law does",
-      "link": "https://ldr.senate.gov.ph/...",
-      sources": [
-         { "name": "Source Name 1", "url": "https://..." },
-         { "name": "Source Name 2", "url": "https://..." }
+      "number": "Senate Bill No. / House Bill No.",
+      "title": "Law Title or Bill Title",
+      "role": "Principal author / Co-author",
+      "summary": "Short summary of what the bill or law does",
+      "status": "Filed / Pending / Enacted",
+      "link": "https://...",
+      "sources": [
+        { "name": "Source Name 1", "url": "https://..." },
+        { "name": "Source Name 2", "url": "https://..." }
       ]
     }
   ],
   "policyFocus": [
     "Key area 1",
     "Key area 2",
-    "..."
+    "Key area 3"
   ]
 }
- Be exhaustive in the laws section. Include **all publicly known and recorded laws and bills** authored, co-authored, or sponsored by the candidate in congress and senate. Focus on verified sources such as:
-- Philippine Senate official site
-- Inquirer, Rappler, GMA News, ABS-CBN, CNN Philippines, BBC News, Vlogs Blogs, Verified Sources, house of representatives official site
-- Official press releases or law journals
-Only include source URLs that:
-- Exist publicly and match actual pages from reputable sources
-- Are copied from known media (e.g., Philippine Senate, GMA News, Rappler, Inquirer, ABS-CBN, CNN Philippines, Congress of the Philippines)
-- Do NOT make up fake links — if a real URL cannot be verified, write: "source URL not found"
-Return only valid JSON, no commentary, no markdown.
+
+Candidate Name: ${candidateName}
+
+🛑 Return only valid JSON. No markdown. No commentary. No formatting outside the JSON object.
 `;
 
+
     const chatCompletion = await openai.chat.completions.create({
-      model: 'gpt-4',
+      model: 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: 'You are a political data assistant returning JSON only.' },
         { role: 'user', content: prompt }
       ],
+      top_p: 1,
       temperature: 0,
     });
 
