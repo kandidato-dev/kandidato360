@@ -11,7 +11,7 @@ export default function DonatePage() {
         </p>
         <div className="flex flex-col gap-4 items-center mb-6">
           <a
-            href="https://www.buymeacoffee.com/"
+            href="https://buymeacoffee.com/benjoe22d"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 px-6 rounded-lg shadow transition"
