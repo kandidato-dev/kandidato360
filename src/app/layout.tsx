@@ -78,6 +78,13 @@ export default function RootLayout({
             __html: `(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9316000,document.createElement('script'))`
           }}
         />
+        <Script
+          id="monetag-extra-401-9316032"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9316032,document.createElement('script'))`
+          }}
+        />
       </body>
     </html>
   );
