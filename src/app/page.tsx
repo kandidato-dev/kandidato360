@@ -116,10 +116,10 @@ export default function Home() {
           </button>
         </Link>
       
-        <Link href="/news">
+        <Link href="/donate">
           <button className="flex flex-col items-center text-xs">
             <span className="text-xl">📰</span>
-            News Feed
+            Support
           </button>
         </Link>
       </div>
