@@ -1,22 +1,22 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
 });
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+export async function POST(request: Request) {
+  try {
+    const { candidateA, candidateB } = await request.json();
 
-  const { candidateA, candidateB } = req.body;
+    if (!candidateA || !candidateB) {
+      return NextResponse.json(
+        { error: 'Both candidate names are required' },
+        { status: 400 }
+      );
+    }
 
-  if (!candidateA || !candidateB) {
-    return res.status(400).json({ error: 'Both candidate names are required' });
-  }
-
-  const prompt = `
+    const prompt = `
 You are a political data assistant. Compare the following two Philippine senatorial candidates using structured JSON. The comparison should focus on the following categories. I also want you to include the sources of the information and it's URL links:
 Please display list of bills and laws that the candidate has sponsored or co-sponsored.
 Please list all the laws and bills that the candidate has authored, co-authored, or sponsored based on publicly available records. Be exhaustive if possible and cite the official Senate records or reputable news sources for each.
@@ -92,9 +92,8 @@ Only include source URLs that:
 Return only valid JSON. No markdown, no commentary.
 `;
 
-  try {
     const chatCompletion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4',
       messages: [
         { role: 'system', content: 'You are a political data assistant returning JSON only.' },
         { role: 'user', content: prompt }
@@ -104,9 +103,12 @@ Return only valid JSON. No markdown, no commentary.
 
     const content = chatCompletion.choices[0].message?.content;
     const parsed = JSON.parse(content || '{}');
-    res.status(200).json(parsed);
+    return NextResponse.json(parsed);
   } catch (error) {
     console.error('OpenAI API error:', error);
-    res.status(500).json({ error: 'Failed to fetch response from OpenAI.' });
+    return NextResponse.json(
+      { error: 'Failed to fetch response from OpenAI.' },
+      { status: 500 }
+    );
   }
 } 
