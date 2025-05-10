@@ -61,7 +61,7 @@ Be specific, factual, and exhaustive. Cite official and reputable sources, and i
 
 ---
 Only list laws and bills the candidate is explicitly known to have authored, co-authored, or sponsored. If uncertain or unverified, do not include the item.
-If the source = "source URL not found" → flag or discard the law
+If the source = "source URL not found", flag or discard the law
 Return the response in this exact JSON structure:
 
 {
@@ -125,8 +125,10 @@ Candidate Name: ${candidateName}
       temperature: 0,
     });
 
-    const content = chatCompletion.choices[0].message?.content;
-    const parsed = JSON.parse(content || '{}');
+    let content = chatCompletion.choices[0].message?.content || '{}';
+    content = content.trim().replace(/^```(json)?/i, '').replace(/```$/, '').trim();
+    const parsed = JSON.parse(content);
+
     return NextResponse.json(parsed);
   } catch (error) {
     console.error('OpenAI API error:', error);

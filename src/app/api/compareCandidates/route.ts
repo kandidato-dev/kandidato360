@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     You always return arrays with at least 5-12 items for "stances" and "laws" if possible.
 
     Only list laws and bills the candidate is explicitly known to have authored, co-authored, or sponsored. If uncertain or unverified, do not include the item.
-    If the source = "source URL not found" → flag or discard the law
+    If the source = "source URL not found", flag or discard the law
     📦 Return the response in this JSON format:
     
     {
@@ -112,7 +112,6 @@ export async function POST(request: Request) {
     - Return only valid JSON. No commentary, markdown, or formatting.
     `;
     
-
     const chatCompletion = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: [
@@ -123,8 +122,10 @@ export async function POST(request: Request) {
       temperature: 0,
     });
 
-    const content = chatCompletion.choices[0].message?.content;
-    const parsed = JSON.parse(content || '{}');
+    let content = chatCompletion.choices[0].message?.content || '{}';
+    content = content.trim().replace(/^```(json)?/i, '').replace(/```$/, '').trim();
+    const parsed = JSON.parse(content);
+
     return NextResponse.json(parsed);
   } catch (error) {
     console.error('OpenAI API error:', error);
