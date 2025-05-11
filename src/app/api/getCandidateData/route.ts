@@ -20,6 +20,9 @@ export async function POST(request: Request) {
 
     const prompt = `
 You are a political data assistant. Provide a detailed and structured JSON response containing factual information about the following Philippine senatorial candidate.
+Generate a structured, neutral profile for ${candidateName}, a Philippine senatorial candidate for the 2025 elections.
+If limited public data exists, summarize known political affiliations, party platform (if available), and provide a short generic bio template including possible motivations for candidacy.
+Do not hallucinate unsupported accomplishments or legislative history. If sources are unavailable, say "no verifiable record found" rather than "source not found".
 
 🔍 Your response must include:
 
@@ -28,7 +31,7 @@ You are a political data assistant. Provide a detailed and structured JSON respo
 3. 📜 **Laws and bills authored, co-authored, or sponsored**
 4. 🎯 **Policy focus areas**
 
-Be specific, factual, and exhaustive. Cite official and reputable sources, and include working URL links only. If uncertain, write "Source not found"
+Be specific, factual, and exhaustive. Cite official and reputable sources, and include working URL links only.
 
 ---
 
@@ -111,7 +114,6 @@ Return the response in this exact JSON structure:
   ]
 }
 
-Candidate Name: ${candidateName}
 
 🛑 Return only valid JSON. No markdown. No commentary. No formatting outside the JSON object.
 `;

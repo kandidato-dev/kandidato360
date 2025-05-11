@@ -18,6 +18,11 @@ export async function POST(request: Request) {
 
     const prompt = `
     You are a political data analyst assistant. Compare the following two Philippine senatorial candidates using structured JSON. The comparison should include four major categories:
+    If limited public data exists, summarize known political affiliations, party platform (if available), and provide a short generic bio template including possible motivations for candidacy.
+    Do not hallucinate unsupported accomplishments or legislative history. If sources are unavailable, say "no verifiable record found" rather than "source not found".
+
+
+
     
     1. Background
     2. Stances on social/political issues
@@ -127,7 +132,7 @@ export async function POST(request: Request) {
         }
       ]
     }
-    
+    The candidate is a Philippine senatorial candidate for the 2025 elections.
     Candidate A: ${candidateA}
     Candidate B: ${candidateB}
     
