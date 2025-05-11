@@ -50,14 +50,14 @@ Be specific, factual, and exhaustive. Cite official and reputable sources, and i
 - Pull from both House and Senate sources.
 - Include bills even if not enacted.
 - Include title, role (author/co-author/sponsor), summary, bill/law number, current status, and link to official record or credible article.
-
+- Prioritize sources from: https://web.senate.gov.ph/lis/leg_sys.aspx, https://web.senate.gov.ph, Congress.gov.ph,
 ---
 
 🔐 Source Validity Rules:
 - Use real URLs only.
 - If a real URL cannot be confirmed, write: "Source not found"
 - Never invent links.
-- Prioritize sources from: https://web.senate.gov.ph, Congress.gov.ph, Rappler, Inquirer, GMA News, ABS-CBN, CNN Philippines, official press releases or public documents.
+- Prioritize sources from: https://web.senate.gov.ph/lis/leg_sys.aspx, https://web.senate.gov.ph, Congress.gov.ph, Rappler, Inquirer, GMA News, ABS-CBN, CNN Philippines, official press releases or public documents.
 
 ---
 Only list laws and bills the candidate is explicitly known to have authored, co-authored, or sponsored. If uncertain or unverified, do not include the item.
@@ -69,7 +69,7 @@ Return the response in this exact JSON structure:
   "fullName": "Full Candidate Name",
   "party": "Most recent political party",
   "age": 0,
-  "senatorBioLink": "https://web.senate.gov.ph/senators/sen_bio/",
+  "senatorBioLink": "https://web.senate.gov.ph/senators/sen_bio/{senatorName}.asp",
   "background": {
     "educationalBackground": "...",
     "professionalExperience": "...",

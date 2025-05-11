@@ -50,13 +50,13 @@ export async function POST(request: Request) {
     - "justification": brief explanation of the candidate's reasoning
     - "sources": array of { "name": "Source Name", "url": "https://..." }
     You always return arrays with at least 5-12 items for "stances" and "laws" if possible.
-
+    - Prioritize sources from: https://web.senate.gov.ph/lis/leg_sys.aspx, https://web.senate.gov.ph, Congress.gov.ph,
 
     🔐 Source Validity Rules:
     - Use real URLs only.
     - If a real URL cannot be confirmed, write: "Source not found"
     - Never invent links.
-    - Prioritize sources from: https://web.senate.gov.ph, Congress.gov.ph, Rappler, Inquirer, GMA News, ABS-CBN, CNN Philippines, official press releases or public documents.
+    - Prioritize sources from: https://web.senate.gov.ph/lis/leg_sys.aspx, https://web.senate.gov.ph, Congress.gov.ph, Rappler, Inquirer, GMA News, ABS-CBN, CNN Philippines, official press releases or public documents.
 
 
     Only list laws and bills the candidate is explicitly known to have authored, co-authored, or sponsored. If uncertain or unverified, do not include the item.
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
           "id": "slugified-name",
           "fullName": "Full Candidate Name",
           "party": "Most recent known political affiliation",
-          "senatorBioLink": "https://web.senate.gov.ph/senators/sen_bio/",
+         "senatorBioLink": "https://web.senate.gov.ph/senators/sen_bio/{senatorName}.asp",
           "age": "Age in years",
           "background": {
             "educationalBackground": "...",
