@@ -71,7 +71,7 @@ export async function POST(request: Request) {
     - Use real URLs only.
     - If a real URL cannot be confirmed, write: "Source not found"
     - Never invent links.
-    - Prioritize sources from: https://web.senate.gov.ph/lis/leg_sys.aspx, https://web.senate.gov.ph, Congress.gov.ph, Rappler, Inquirer, GMA News, ABS-CBN, CNN Philippines, official press releases or public documents.
+    - Prioritize sources from: https://web.senate.gov.ph/lis/leg_sys.aspx, https://web.senate.gov.ph, Congress.gov.ph, Rappler, Inquirer, https://www.gmanetwork.com/news/eleksyon/2025/candidates/, ABS-CBN, CNN Philippines, official press releases or public documents.
 
 
 

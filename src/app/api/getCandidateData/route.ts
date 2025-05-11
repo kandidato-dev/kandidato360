@@ -26,7 +26,7 @@ Do not hallucinate unsupported accomplishments or legislative history. If source
 
 🔍 Your response must include:
 
-1. 📘 **Background Information**
+1. 📘 **Background Information**(https://www.gmanetwork.com/news/eleksyon/2025/candidates/)
 2. 📊 **Stances on key social and political issues**
 3. 📜 **Laws and bills authored, co-authored, or sponsored**
 4. 🎯 **Policy focus areas**
