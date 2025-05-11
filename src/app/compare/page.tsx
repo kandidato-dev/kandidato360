@@ -10,14 +10,18 @@ interface Stance {
   position: string;
   justification: string;
   sources: { name: string; url: string }[];
+  source: string;
 }
 
 interface Law {
   title: string;
   role: string;
   summary: string;
+  description: string;
   status?: string;
   sources: { name: string; url: string }[];
+  source: string;
+  justification: string;
 }
 
 interface Background {
@@ -70,6 +74,23 @@ export default function ComparePage() {
     };
     fetchCandidates();
   }, []);
+
+  // Add this function to handle candidate selection
+  const handleCandidateSelect = (value: string, isCandidateA: boolean) => {
+    if (isCandidateA) {
+      setSelectedA(value);
+      if (value === selectedB) {
+        setError('You selected the same candidate. Please select a different candidate.');
+        setIsErrorDialogOpen(true);
+      }
+    } else {
+      setSelectedB(value);
+      if (value === selectedA) {
+        setError('You selected the same candidate. Please select a different candidate.');
+        setIsErrorDialogOpen(true);
+      }
+    }
+  };
 
   // Add this function to trigger comparison only on button click
   const handleCompare = async () => {
@@ -144,39 +165,75 @@ export default function ComparePage() {
       )}
 
       {/* --- Horizontally Aligned Candidate Cards --- */}
-      <div className="flex flex-col md:flex-row justify-center items-start gap-8 mb-8">
-        {[0, 1].map((idx) => (
-          <div key={idx} className="flex flex-col items-center w-full md:w-1/2 max-w-xs mx-auto">
-            <div className="text-xs mt-2 mb-2">Select a candidate</div>
-            <div className="w-full max-w-[300px] mb-4">
-              <select
-                className="p-2 border rounded w-full"
-                value={idx === 0 ? selectedA : selectedB}
-                onChange={e => idx === 0 ? setSelectedA(e.target.value) : setSelectedB(e.target.value)}
-              >
-                <option value="">Select Candidate {idx === 0 ? 'A' : 'B'}</option>
-                {candidateOptions.map(opt => (
-                  <option key={opt.id} value={opt.name}>{opt.name}</option>
-                ))}
-              </select>
-            </div>
-            <div className="w-[120px] h-[120px] rounded-full overflow-hidden flex items-center justify-center bg-gray-200">
-              <Image
-                src={candidateOptions.find(opt => opt.name === (idx === 0 ? selectedA : selectedB))?.image || "/static/images/candidate_avatar.png"}
-                width={120}
-                height={120}
-                alt={candidates[idx]?.fullName || `Candidate ${idx === 0 ? 'A' : 'B'}`}
-                className="object-cover w-full h-full"
-              />
-            </div>
-            <div className="mt-2 text-center min-h-[2.5rem] flex items-center justify-center">
-              <div className="font-bold">{candidates[idx]?.fullName || <span>&nbsp;</span>}</div>
-            </div>
-            <div className="bg-[#0A4990] text-white rounded-lg px-4 py-2 mt-2 inline-block min-h-[2.5rem] flex items-center justify-center">
-              {candidates[idx]?.party || <span>&nbsp;</span>}
-            </div>
+      <div className="flex flex-row justify-center items-center gap-2 md:gap-8 mb-8">
+        {/* First candidate */}
+        <div className="flex flex-col items-center w-1/2 md:w-1/3 max-w-[150px] md:max-w-xs mx-auto">
+          <div className="text-xs mt-2 mb-2">Select a candidate</div>
+          <div className="w-full max-w-[120px] md:max-w-[300px] mb-2 md:mb-4">
+            <select
+              className="p-1 md:p-2 border rounded w-full text-xs md:text-base"
+              value={selectedA}
+              onChange={e => handleCandidateSelect(e.target.value, true)}
+            >
+              <option value="">Select A</option>
+              {candidateOptions.map(opt => (
+                <option key={opt.id} value={opt.name}>{opt.name}</option>
+              ))}
+            </select>
           </div>
-        ))}
+          <div className="w-[60px] h-[60px] md:w-[120px] md:h-[120px] rounded-full overflow-hidden flex items-center justify-center bg-gray-200">
+            <Image
+              src={candidateOptions.find(opt => opt.name === selectedA)?.image || "/static/images/candidate_avatar.png"}
+              width={120}
+              height={120}
+              alt={candidates[0]?.fullName || 'Candidate A'}
+              className="object-cover w-full h-full"
+            />
+          </div>
+          <div className="mt-1 md:mt-2 text-center min-h-[1.5rem] md:min-h-[2.5rem] flex items-center justify-center">
+            <div className="font-bold text-xs md:text-base">{candidates[0]?.fullName || <span>&nbsp;</span>}</div>
+          </div>
+          <div className="bg-[#0A4990] text-white rounded-lg px-2 md:px-4 py-1 md:py-2 mt-1 md:mt-2 inline-block min-h-[1.5rem] md:min-h-[2.5rem] flex items-center justify-center text-xs md:text-base">
+            {candidates[0]?.party || <span>&nbsp;</span>}
+          </div>
+        </div>
+
+        {/* VS text in the middle */}
+        <div className="flex items-center justify-center text-lg md:text-2xl font-bold text-gray-500">
+          VS
+        </div>
+
+        {/* Second candidate */}
+        <div className="flex flex-col items-center w-1/2 md:w-1/3 max-w-[150px] md:max-w-xs mx-auto">
+          <div className="text-xs mt-2 mb-2">Select a candidate</div>
+          <div className="w-full max-w-[120px] md:max-w-[300px] mb-2 md:mb-4">
+            <select
+              className="p-1 md:p-2 border rounded w-full text-xs md:text-base"
+              value={selectedB}
+              onChange={e => handleCandidateSelect(e.target.value, false)}
+            >
+              <option value="">Select B</option>
+              {candidateOptions.map(opt => (
+                <option key={opt.id} value={opt.name}>{opt.name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="w-[60px] h-[60px] md:w-[120px] md:h-[120px] rounded-full overflow-hidden flex items-center justify-center bg-gray-200">
+            <Image
+              src={candidateOptions.find(opt => opt.name === selectedB)?.image || "/static/images/candidate_avatar.png"}
+              width={120}
+              height={120}
+              alt={candidates[1]?.fullName || 'Candidate B'}
+              className="object-cover w-full h-full"
+            />
+          </div>
+          <div className="mt-1 md:mt-2 text-center min-h-[1.5rem] md:min-h-[2.5rem] flex items-center justify-center">
+            <div className="font-bold text-xs md:text-base">{candidates[1]?.fullName || <span>&nbsp;</span>}</div>
+          </div>
+          <div className="bg-[#0A4990] text-white rounded-lg px-2 md:px-4 py-1 md:py-2 mt-1 md:mt-2 inline-block min-h-[1.5rem] md:min-h-[2.5rem] flex items-center justify-center text-xs md:text-base">
+            {candidates[1]?.party || <span>&nbsp;</span>}
+          </div>
+        </div>
       </div>
       {/* --- End Horizontally Aligned Candidate Cards --- */}
 
@@ -185,7 +242,7 @@ export default function ComparePage() {
         <button
           onClick={handleCompare}
           disabled={loading || !selectedA || !selectedB}
-          className={`w-64 bg-blue-700 text-white font-bold rounded-md px-8 py-4 text-xl shadow ${
+          className={`w-32 md:w-64 bg-blue-700 text-white font-bold rounded-md px-4 md:px-8 py-2 md:py-4 text-sm md:text-xl shadow ${
             loading || !selectedA || !selectedB ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-800'
           }`}
         >
@@ -234,22 +291,23 @@ export default function ComparePage() {
             )}
             {activeTab === "stances" && candidates[idx]?.stances && candidates[idx].stances.map((stance, i) => (
               <div key={i} className="bg-white shadow-md rounded p-4 mb-4">
-                <h3 className="font-bold text-black">{stance.issue}</h3>
-                <p className="text-black"><strong>Position:</strong> {stance.position}</p>
-                <p className="text-black"><strong>Justification:</strong> {stance.justification}</p>
-                <div className="flex flex-wrap mt-2">
-                  {stance.sources.map((source, idx) => (
-                    <a
-                      key={idx}
-                      href={source.url}
-                      className="bg-gray-200 text-blue-500 rounded-full px-3 py-1 m-1 inline-block"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {source.name}
-                    </a>
-                  ))}
-                </div>
+                <h4 className="font-semibold text-gray-800">{stance.issue}</h4>
+                <p className="text-gray-600">{stance.position}</p>
+                {stance.justification && (
+                  <p className="text-gray-600 mb-2">
+                    <span className="font-medium">Justification:</span> {stance.justification}
+                  </p>
+                )}
+                <a
+                  href={`https://www.google.com/search?q=${encodeURIComponent(
+                    `${stance.issue} ${candidates[idx].fullName} senate philippines`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline text-sm"
+                >
+                  Source
+                </a>
               </div>
             ))}
             {activeTab === "laws" && candidates[idx]?.laws && candidates[idx].laws.length === 0 && (
@@ -259,48 +317,41 @@ export default function ComparePage() {
             )}
             {activeTab === "laws" && candidates[idx]?.laws && candidates[idx].laws.map((law, i) => (
               <div key={i} className="bg-white shadow-md rounded p-4 mb-4">
-                <h3 className="font-bold text-black">{law.title}</h3>
-                <p className="text-black"><strong>Role:</strong> {law.role}</p>
-                <p className="text-black"><strong>Summary:</strong> {law.summary}</p>
-                {law.status && <p className="text-black"><strong>Status:</strong> {law.status}</p>}
-                <div className="flex flex-wrap mt-2">
-                  {law.sources.map((source, idx) => {
-                    const updatedUrl = source.url.replace(
-                      /https?:\/\/(legacy\.)?senate\.gov\.ph/gi,
-                      "https://senate.gov.ph"
-                    );
-                    return (
-                      <a
-                        key={idx}
-                        href={updatedUrl}
-                        className="bg-gray-200 text-blue-500 rounded-full px-3 py-1 m-1 inline-block"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {source.name}
-                      </a>
-                    );
-                  })}
-                </div>
+                <h4 className="font-semibold text-gray-800">{law.title}</h4>
+                <p className="text-gray-600 mb-2">
+                  <span className="font-medium">Law/Bill Title:</span> {law.title}
+                </p>
+                <p className="text-gray-600 mb-2">
+                  <span className="font-medium">Role:</span> {law.role}
+                </p>
+                <p className="text-gray-600 mb-2">
+                  <span className="font-medium">Description:</span>{" "}
+                  {law.summary && law.summary.trim() !== ""
+                    ? law.summary
+                    : law.description && law.description.trim() !== ""
+                      ? law.description
+                      : <span className="italic text-gray-400">Source not found</span>}
+                </p>
+                {law.status && (
+                  <p className="text-gray-600 mb-2">
+                    <span className="font-medium">Status:</span> {law.status}
+                  </p>
+                )}
+                <a
+                  href={`https://www.google.com/search?q=${encodeURIComponent(
+                    `${law.title} ${candidates[idx].fullName} senate philippines`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline text-sm"
+                >
+                  Source
+                </a>
               </div>
             ))}
-            {activeTab === "policy" && candidates[idx]?.policyFocus && (
-              <div className="bg-white shadow-md rounded p-4 mb-4">
-                <ul className="list-disc pl-5">
-                  {candidates[idx].policyFocus.map((policy, i) => (
-                    <li key={i} className="text-black">{policy}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </div>
         ))}
       </div>
-      <div className="mt-12 text-center text-xs text-gray-400">
-        <span>
-        Disclaimer: The information on this page is generated by AI (OpenAI GPT-4o). The developer does not have control over the data that will be displayed in the result. The information may not be 100% accurate or up-to-date. Please verify details from official and reputable sources.
-        </span>
-      </div>
     </div>
   );
-} 
+}

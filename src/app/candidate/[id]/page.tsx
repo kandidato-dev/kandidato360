@@ -143,18 +143,21 @@ const CandidateDetails = () => {
                 <h3 className="font-bold text-black">{stance.issue}</h3>
                 <p className="text-black"><strong>Position:</strong> {stance.position}</p>
                 <p className="text-black"><strong>Justification:</strong> {stance.justification}</p>
+                
                 <div className="flex flex-wrap mt-2">
-                  {stance.sources.map((source: { name: string; url: string }, idx: number) => (
-                    <a
-                      key={idx}
-                      href={source.url}
-                      className="bg-gray-200 text-blue-500 rounded-full px-3 py-1 m-1 inline-block"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {source.name}
-                    </a>
-                  ))}
+                {stance.sources.map((source: { name: string; url: string }, idx: number) => (
+                  <a
+                    key={`${idx}-source`}
+                    href={`https://www.google.com/search?q=${encodeURIComponent(
+                      `${stance.issue} ${candidateData.name} senate philippines`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline text-sm"
+                  >
+                    Source
+                  </a>
+                ))}
                 </div>
               </div>
             ))}
@@ -192,18 +195,21 @@ const CandidateDetails = () => {
                   <p className="text-black"><strong>Role:</strong> {law.role}</p>
                   <p className="text-black"><strong>Summary:</strong> {law.summary}</p>
                   {law.status && <p className="text-black"><strong>Status:</strong> {law.status}</p>}
+                
                   <div className="flex flex-wrap mt-2">
-                    {law.sources.map((source: { name: string; url: string }, idx: number) => (
-                      <a
-                        key={idx}
-                        href={source.url}
-                        className="bg-gray-200 text-blue-500 rounded-full px-3 py-1 m-1 inline-block"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {source.name}
-                      </a>
-                    ))}
+                  {law.sources.map((source: { name: string; url: string }, idx: number) => (
+                    <a
+                      key={`${idx}-source`}
+                      href={`https://www.google.com/search?q=${encodeURIComponent(
+                        `${law.title} ${candidateData.name} senate philippines`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 underline text-sm"
+                    >
+                      Source
+                    </a>
+                  ))}
                   </div>
                 </div>
               );
