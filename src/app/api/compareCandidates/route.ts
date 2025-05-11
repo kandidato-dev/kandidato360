@@ -49,14 +49,28 @@ export async function POST(request: Request) {
     - "position": Support / Oppose / Neutral
     - "justification": brief explanation of the candidate's reasoning
     - "sources": array of { "name": "Source Name", "url": "https://..." }
-    You always return arrays with at least 5-12 items for "stances" and "laws" if possible.
     - Prioritize sources from: https://web.senate.gov.ph/lis/leg_sys.aspx, https://web.senate.gov.ph, Congress.gov.ph,
+
+
+
+    📜 Laws & Bills:
+    - Include at least 8-15 publicly recorded items is possible
+    - Pull from both House and Senate sources.
+    - Include bills even if not enacted.
+    - Make sure that the law/bill is a public record and credible. Do not make the law/bill wrongly put in the candidate.
+    - Include title, role (author/co-author/sponsor), summary, bill/law number, current status, and link to official record or credible article.
+    - Prioritize sources from: https://web.senate.gov.ph/lis/leg_sys.aspx, https://web.senate.gov.ph, Congress.gov.ph
+---
 
     🔐 Source Validity Rules:
     - Use real URLs only.
     - If a real URL cannot be confirmed, write: "Source not found"
     - Never invent links.
     - Prioritize sources from: https://web.senate.gov.ph/lis/leg_sys.aspx, https://web.senate.gov.ph, Congress.gov.ph, Rappler, Inquirer, GMA News, ABS-CBN, CNN Philippines, official press releases or public documents.
+
+
+
+
 
 
     Only list laws and bills the candidate is explicitly known to have authored, co-authored, or sponsored. If uncertain or unverified, do not include the item.
@@ -126,7 +140,7 @@ export async function POST(request: Request) {
     const chatCompletion = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: [
-        { role: 'system', content: 'You are a political data assistant returning JSON only.' },
+        { role: 'system', content: 'You are a political data assistant returning JSON only. Do not hallucinate or make up information. If you are unsure, write "Source not found".' },
         { role: 'user', content: prompt }
       ],
       top_p: 1,
