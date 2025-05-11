@@ -59,7 +59,7 @@ export async function POST(request: Request) {
 
 
     📜 Laws & Bills:
-    - Include at least 8-15 publicly recorded items is possible
+    - Fetch all publicly recorded items as possible
     - Pull from both House and Senate sources.
     - Include bills even if not enacted.
     - Make sure that the law/bill is a public record and credible. Do not make the law/bill wrongly put in the candidate.
