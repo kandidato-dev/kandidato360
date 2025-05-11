@@ -264,17 +264,23 @@ export default function ComparePage() {
                 <p className="text-black"><strong>Summary:</strong> {law.summary}</p>
                 {law.status && <p className="text-black"><strong>Status:</strong> {law.status}</p>}
                 <div className="flex flex-wrap mt-2">
-                  {law.sources.map((source, idx) => (
-                    <a
-                      key={idx}
-                      href={source.url}
-                      className="bg-gray-200 text-blue-500 rounded-full px-3 py-1 m-1 inline-block"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {source.name}
-                    </a>
-                  ))}
+                  {law.sources.map((source, idx) => {
+                    const updatedUrl = source.url.replace(
+                      /https?:\/\/(legacy\.)?senate\.gov\.ph/gi,
+                      "https://senate.gov.ph"
+                    );
+                    return (
+                      <a
+                        key={idx}
+                        href={updatedUrl}
+                        className="bg-gray-200 text-blue-500 rounded-full px-3 py-1 m-1 inline-block"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {source.name}
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             ))}

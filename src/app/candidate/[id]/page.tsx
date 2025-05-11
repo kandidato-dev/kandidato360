@@ -38,6 +38,7 @@ interface Candidate {
   notableAccomplishments: string;
   criminalRecords: string;
   numberOfLawsAndBillsAuthored?: number;
+  senatorBioLink: string;
 }
 
 const CandidateDetails = () => {
@@ -100,6 +101,7 @@ const CandidateDetails = () => {
           notableAccomplishments: background.notableAccomplishments,
           criminalRecords: background.criminalRecords,
           numberOfLawsAndBillsAuthored: background.numberOfLawsAndBillsAuthored,
+          senatorBioLink: data.senatorBioLink,
         });
         setError(null);
       } catch (error) {
@@ -245,6 +247,19 @@ const CandidateDetails = () => {
           <h1 className="text-2xl font-bold">{candidateData.name}</h1>
           <div className="bg-[#0A4990] text-white rounded-full px-3 py-1 inline-block mt-2">
             {candidateData.partyList}
+          </div>
+          <div className="text-gray-600 text-sm mb-2">
+            <span className="font-semibold">Party:</span> {candidateData.partyList}
+            <div>
+              <Link
+                href={candidateData.senatorBioLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline ml-2"
+              >
+                View Senate Bio
+              </Link>
+            </div>
           </div>
           <p className="text-gray-600 mt-2">
             <strong>Educational Background:</strong> {candidateData.educationalBackground}

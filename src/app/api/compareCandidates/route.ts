@@ -24,11 +24,12 @@ export async function POST(request: Request) {
     3. Laws and bills authored, co-authored, or sponsored
     4. Policy focus
     
+    Please include the senator bio link if available fromm the https://web.senate.gov.ph/senators/sen_bio/
     📌 IMPORTANT INSTRUCTIONS:
     
     - For the **laws and bills** section, provide **at least 5–10 publicly recorded items per candidate**. These must include **enacted laws and pending or filed bills** from Senate records or reliable news sources.
     - Be as **exhaustive as possible**. If more than 10 entries are known and verifiable, include them all.
-    - For each law/bill, include: full title, short summary, role (author/co-author/sponsor), current status (enacted, pending, filed), and citation sources **with real, valid URLs only**.
+    - For each law/bill, include: full title, short summary, role (author/co-author/sponsor), current status (enacted, pending, filed), and citation sources **with real, valid URLs only**. If uncertain, write "Source not found"
     - If a real URL can't be confirmed, use "source URL not found" — never guess.
     
     🗳️ Social Issues for Stances:
@@ -50,6 +51,14 @@ export async function POST(request: Request) {
     - "sources": array of { "name": "Source Name", "url": "https://..." }
     You always return arrays with at least 5-12 items for "stances" and "laws" if possible.
 
+
+    🔐 Source Validity Rules:
+    - Use real URLs only.
+    - If a real URL cannot be confirmed, write: "Source not found"
+    - Never invent links.
+    - Prioritize sources from: https://web.senate.gov.ph, Congress.gov.ph, Rappler, Inquirer, GMA News, ABS-CBN, CNN Philippines, official press releases or public documents.
+
+
     Only list laws and bills the candidate is explicitly known to have authored, co-authored, or sponsored. If uncertain or unverified, do not include the item.
     If the source = "source URL not found", flag or discard the law
     📦 Return the response in this JSON format:
@@ -60,6 +69,8 @@ export async function POST(request: Request) {
           "id": "slugified-name",
           "fullName": "Full Candidate Name",
           "party": "Most recent known political affiliation",
+          "senatorBioLink": "https://web.senate.gov.ph/senators/sen_bio/",
+          "age": "Age in years",
           "background": {
             "educationalBackground": "...",
             "professionalExperience": "...",
