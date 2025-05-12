@@ -11,6 +11,7 @@ interface Candidate {
   name: string;
   party: string;
   image: string;
+  gmaProfileLink: string;
 }
 
 export default function CandidatesPage() {
@@ -113,7 +114,7 @@ export default function CandidatesPage() {
                   Compare
                 </button>
               </div>
-              <Link href={`/candidate/${candidate.id}`}>
+              <Link href={`/candidate/${candidate.id}?image=${encodeURIComponent(candidate.image)}&gmaProfileLink=${encodeURIComponent(candidate.gmaProfileLink)}`}>
                 <div className="p-6 pt-0">
                   <h2 className="text-xl font-semibold text-gray-900 mb-2">
                     {candidate.name}

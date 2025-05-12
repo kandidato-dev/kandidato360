@@ -39,6 +39,7 @@ interface Candidate {
   criminalRecords: string;
   numberOfLawsAndBillsAuthored?: number;
   senatorBioLink: string;
+  gmaProfileLink?: string;
 }
 
 const CandidateDetails = () => {
@@ -55,6 +56,16 @@ const CandidateDetails = () => {
     const fetchCandidateData = async () => {
       setLoading(true);
       try {
+        // First, fetch the candidate's GMA Network profile link from the candidates route
+        const candidatesRes = await fetch('/api/candidates');
+        if (!candidatesRes.ok) {
+          throw new Error('Failed to fetch candidates list');
+        }
+        const candidatesData = await candidatesRes.json();
+        const candidate = candidatesData.find((c: any) => c.id === params.id);
+        const gmaProfileLink = candidate?.gmaProfileLink || 'https://www.gmanetwork.com/news/eleksyon/2025/candidates/';
+
+        // Then fetch the detailed candidate data
         const res = await fetch('/api/getCandidateData', {
           method: 'POST',
           headers: {
@@ -102,6 +113,7 @@ const CandidateDetails = () => {
           criminalRecords: background.criminalRecords,
           numberOfLawsAndBillsAuthored: background.numberOfLawsAndBillsAuthored,
           senatorBioLink: data.senatorBioLink,
+          gmaProfileLink: gmaProfileLink,
         });
         setError(null);
       } catch (error) {
@@ -292,7 +304,7 @@ const CandidateDetails = () => {
 
       <div className="mt-4 mb-4">
         <a
-          href="https://www.gmanetwork.com/news/eleksyon/2025/candidates/"
+          href={candidateData.gmaProfileLink}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
