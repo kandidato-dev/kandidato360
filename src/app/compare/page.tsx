@@ -349,6 +349,20 @@ export default function ComparePage() {
                 </a>
               </div>
             ))}
+            {activeTab === "policy" && (
+              <div className="bg-white shadow-md rounded p-4 mb-4">
+                <h4 className="font-semibold text-gray-800 mb-4">Policy Focus Areas</h4>
+                {candidates[idx]?.policyFocus && candidates[idx].policyFocus.length > 0 ? (
+                  <ul className="list-disc list-inside space-y-2">
+                    {candidates[idx].policyFocus.map((policy, i) => (
+                      <li key={i} className="text-gray-600">{policy}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-500 italic">No policy focus areas available</p>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>

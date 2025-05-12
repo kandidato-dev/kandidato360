@@ -268,18 +268,7 @@ const CandidateDetails = () => {
           </div>
           <div className="text-gray-600 text-sm mb-2">
             <span className="font-semibold">Party:</span> {candidateData.partyList}
-            {candidateData.senatorBioLink && (
-              <div>
-                <Link
-                  href={candidateData.senatorBioLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 underline ml-2"
-                >
-                  View Senate Bio
-                </Link>
-              </div>
-            )}
+          
           </div>
           <p className="text-gray-600 mt-2">
             <strong>Educational Background:</strong> {candidateData.educationalBackground}
